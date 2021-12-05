@@ -26,7 +26,8 @@ void record_data(QSqlDatabase data_base, int table_id, QVector <task_data_struct
 void record_data(QSqlDatabase data_base, int table_id, QVector <project_data_struct> project_data_vec);
 void read_data(QSqlDatabase data_base, int table_id, QVector <task_data_struct> &task_data_vec);
 void read_data(QSqlDatabase data_base, int table_id, QVector <project_data_struct> &project_data_vec);
-void delete_data(QSqlDatabase data_base, int table_id, QString str, bool project_table_flag);
+void delete_data(QSqlDatabase data_base, int table_id, QString fild, bool project_table_flag);
+void delete_table(QSqlDatabase data_base, int table_id, QString table_name);
 
 
 #endif // DBFUN_H

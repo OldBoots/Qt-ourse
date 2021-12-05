@@ -26,15 +26,5 @@ int main(int argc, char *argv[])
 //        for(int i = 0; i < struct_vec.size(); i++){
 //            qDebug() << struct_vec[i].tName << struct_vec[i].tData << struct_vec[i].tBrigade << struct_vec[i].tProgress;
 //        }
-        read_data(data_base, 0, struct_vec);
-        for(int i = 0; i < struct_vec.size(); i++){
-            qDebug() << struct_vec[i].tName << struct_vec[i].tData << struct_vec[i].tBrigade << struct_vec[i].tProgress;
-        }
-    delete_data(data_base, 0, "Vova1", 0);
-    struct_vec.clear();
-    read_data(data_base, 0, struct_vec);
-    for(int i = 0; i < struct_vec.size(); i++){
-        qDebug() << struct_vec[i].tName << struct_vec[i].tData << struct_vec[i].tBrigade << struct_vec[i].tProgress;
-    }
     return a.exec();
 }

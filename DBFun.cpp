@@ -115,11 +115,9 @@ void read_data(QSqlDatabase data_base, int table_id, QVector <project_data_struc
 
 void delete_data(QSqlDatabase data_base, int table_id, QString fild, bool project_table_flag){
     QSqlQuery query(data_base);
-    project_data_struct form;
     bool cntrl = true; QString error_log;
     if (!data_base.open()){ cntrl = false; error_log += "open ";}
     QString sql;
-    qDebug() << data_base.tables();
     if(project_table_flag){
         sql = "DELETE FROM projects" + QString::number(table_id) + " WHERE pBregade = \'" + fild + "\'";
     } else {
@@ -129,4 +127,15 @@ void delete_data(QSqlDatabase data_base, int table_id, QString fild, bool projec
     data_base.close();
     if(cntrl){ qDebug() << "Deleting projects\t\tOK"; }
     else { qDebug() << "Deleting projects\t\tNOT OK" << Qt::endl << error_log; }
+}
+
+void delete_table(QSqlDatabase data_base, int table_id, QString table_name){
+    QSqlQuery query(data_base);
+    bool cntrl = true; QString error_log;
+    if (!data_base.open()){ cntrl = false; error_log += "open ";}
+    QString sql = "DROP TABLE " + table_name + QString::number(table_id);
+    if (!query.exec(sql)){ cntrl = false; error_log += "exec ";}
+    data_base.close();
+    if(cntrl){ qDebug() << "Deleting table\t\tOK"; }
+    else { qDebug() << "Deleting table\t\tNOT OK" << Qt::endl << error_log; }
 }
