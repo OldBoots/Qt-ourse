@@ -125,8 +125,8 @@ void delete_data(QSqlDatabase data_base, int table_id, QString fild, bool projec
     }
     if (!query.exec(sql)){ cntrl = false; error_log += "exec ";}
     data_base.close();
-    if(cntrl){ qDebug() << "Deleting projects\t\tOK"; }
-    else { qDebug() << "Deleting projects\t\tNOT OK" << Qt::endl << error_log; }
+    if(cntrl){ qDebug() << "Deleting record\t\tOK"; }
+    else { qDebug() << "Deleting record\t\tNOT OK" << Qt::endl << error_log; }
 }
 
 void delete_table(QSqlDatabase data_base, int table_id, QString table_name){
