@@ -1,11 +1,11 @@
- #include "DBFun.h"
+#include "DBFun.h"
 
 void create_table(QSqlDatabase data_base, int table_id, bool project_table_flag){
     bool cntrl = true; QString error_log;
     if (!data_base.open()){ cntrl = false; error_log += "open ";}
     QString sql;
     if (project_table_flag){
-        sql = "CREATE TABLE projects_"
+        sql = "CREATE TABLE projects"
                 + QString::number(table_id)
                 + " ("
                   "pName         TEXT, "
@@ -61,7 +61,7 @@ void record_data(QSqlDatabase data_base, int table_id, QVector <project_data_str
               "pTask         TEXT, "
               "pBrigade      TEXT)"
               "VALUES (:pName, :pImage, :pData, :pTask, :pBrigade)";
-   if(!query.prepare(sql)){ cntrl = false; error_log += "prepare ";};
+    if(!query.prepare(sql)){ cntrl = false; error_log += "prepare ";};
     for(int i = 0; i < project_data_vec.size(); i++){
         query.bindValue(":pName", project_data_vec[i].pName);
         query.bindValue(":pImage", project_data_vec[i].pImage);
@@ -76,12 +76,11 @@ void record_data(QSqlDatabase data_base, int table_id, QVector <project_data_str
 }
 
 void read_data(QSqlDatabase data_base, int table_id, QVector <task_data_struct> &task_data_vec){
-    QSqlQuery query;
+    QSqlQuery query(data_base);
     task_data_struct form;
     bool cntrl = true; QString error_log;
     if (!data_base.open()){ cntrl = false; error_log += "open ";}
-    QString sql;
-    sql = "SELECT tName, tData, tBrigade, tProgress FROM tasks" + QString::number(table_id);
+    QString sql = "SELECT tName, tData, tBrigade, tProgress FROM tasks" + QString::number(table_id);
     if (!query.exec(sql)){ cntrl = false; error_log += "exec ";}
     while(query.next()){
         form.tName = query.value(0).toString();
@@ -95,12 +94,11 @@ void read_data(QSqlDatabase data_base, int table_id, QVector <task_data_struct> 
     else { qDebug() << "Reading tasks\t\tNOT OK" << Qt::endl << error_log; }
 }
 void read_data(QSqlDatabase data_base, int table_id, QVector <project_data_struct> &project_data_vec){
-    QSqlQuery query;
+    QSqlQuery query(data_base);
     project_data_struct form;
     bool cntrl = true; QString error_log;
-    if (!data_base.open()){ cntrl = false; error_log += "exec ";}
-    QString sql;
-    sql = "SELECT pName, pImage, pData, pTask, pBrigade FROM projects" + QString::number(table_id);
+    if (!data_base.open()){ cntrl = false; error_log += "open ";}
+    QString sql = "SELECT pName, pImage, pData, pTask, pBrigade FROM projects" + QString::number(table_id);
     if (!query.exec(sql)){ cntrl = false; error_log += "exec ";}
     while(query.next()){
         form.pName = query.value(0).toString();
@@ -113,4 +111,22 @@ void read_data(QSqlDatabase data_base, int table_id, QVector <project_data_struc
     data_base.close();
     if(cntrl){ qDebug() << "Reading projects\t\tOK"; }
     else { qDebug() << "Reading projects\t\tNOT OK" << Qt::endl << error_log; }
+}
+
+void delete_data(QSqlDatabase data_base, int table_id, QString fild, bool project_table_flag){
+    QSqlQuery query(data_base);
+    project_data_struct form;
+    bool cntrl = true; QString error_log;
+    if (!data_base.open()){ cntrl = false; error_log += "open ";}
+    QString sql;
+    qDebug() << data_base.tables();
+    if(project_table_flag){
+        sql = "DELETE FROM projects" + QString::number(table_id) + " WHERE pBregade = \'" + fild + "\'";
+    } else {
+        sql = "DELETE FROM tasks" + QString::number(table_id) + " WHERE tName = \'" + fild + "\'";
+    }
+    if (!query.exec(sql)){ cntrl = false; error_log += "exec ";}
+    data_base.close();
+    if(cntrl){ qDebug() << "Deleting projects\t\tOK"; }
+    else { qDebug() << "Deleting projects\t\tNOT OK" << Qt::endl << error_log; }
 }
