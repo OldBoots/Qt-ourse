@@ -1,8 +1,8 @@
  #include "DBFun.h"
 
 void create_table(QSqlDatabase data_base, int table_id, bool project_table_flag){
-    bool cntrl = true;
-    if (!data_base.open()){ cntrl = false; }
+    bool cntrl = true; QString error_log;
+    if (!data_base.open()){ cntrl = false; error_log += "open ";}
     QString sql;
     if (project_table_flag){
         sql = "CREATE TABLE projects_"
@@ -23,7 +23,7 @@ void create_table(QSqlDatabase data_base, int table_id, bool project_table_flag)
                   "tProgress     TEXT)";
     }
     QSqlQuery query(data_base);
-    if(!query.exec(sql)){ cntrl = false; }
+    if(!query.exec(sql)){ cntrl = false;  error_log += "open ";}
     data_base.close();
     if(cntrl){ qDebug() << "Сreating a table\t\tOK"; }
     else { qDebug() << "Сreating a table\t\tNOT OK"; }
@@ -111,6 +111,6 @@ void read_data(QSqlDatabase data_base, int table_id, QVector <project_data_struc
         project_data_vec.push_back(form);
     }
     data_base.close();
-    if(cntrl){ qDebug() << "Reading project\t\tOK"; }
-    else { qDebug() << "Reading project\t\tNOT OK" << Qt::endl << error_log; }
+    if(cntrl){ qDebug() << "Reading projects\t\tOK"; }
+    else { qDebug() << "Reading projects\t\tNOT OK" << Qt::endl << error_log; }
 }

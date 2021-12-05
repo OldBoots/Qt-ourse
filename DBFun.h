@@ -27,4 +27,5 @@ void record_data(QSqlDatabase data_base, int table_id, QVector <project_data_str
 void read_data(QSqlDatabase data_base, int table_id, QVector <task_data_struct> &task_data_vec);
 void read_data(QSqlDatabase data_base, int table_id, QVector <project_data_struct> &project_data_vec);
 
+
 #endif // DBFUN_H
