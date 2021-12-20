@@ -12,13 +12,18 @@ CONFIG += c++11
 SOURCES += \
     DBFun.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    select_window.cpp
 
 HEADERS += \
     DBFun.h \
-    mainwindow.h
+    mainwindow.h \
+    select_window.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    src.qrc

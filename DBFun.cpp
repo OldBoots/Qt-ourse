@@ -117,6 +117,16 @@ void add_project_record(QSqlDatabase data_base, int id_table, project_data_struc
 
 // READ DATA //
 
+void read_model_from_db(QSqlDatabase data_base, QSqlTableModel *&model, QString name_table){
+    bool cntrl = true; QString error_log;
+    if (!data_base.open()){ cntrl = false; error_log += "open ";}
+    model->setTable(name_table);
+    model->select();
+    data_base.close();
+    if(cntrl){ qDebug() << "Reading table\t\tOK"; }
+    else { qDebug() << "Reading table\t\tNOT OK" << Qt::endl << error_log; }
+}
+
 void read_task_table(QSqlDatabase data_base, int id_table, QVector <task_data_struct> &task_data_vec){
     if(!task_data_vec.isEmpty()){ task_data_vec.clear(); }
     task_data_struct form;

@@ -2,7 +2,7 @@
 #define DBFUN_H
 
 #include <QtSql>
-
+#include <QSqlTableModel>
 
 struct project_data_struct
 {
@@ -30,6 +30,7 @@ void record_project_data(QSqlDatabase data_base, int id_table, QVector <project_
 void add_task_record(QSqlDatabase data_base, int id_table, task_data_struct task_data_vec);
 void add_project_record(QSqlDatabase data_base, int id_table, project_data_struct project_data_vec);
 
+void read_model_from_db(QSqlDatabase data_base, QSqlTableModel *&model, QString name_table);
 void read_task_table(QSqlDatabase data_base, int id_table, QVector <task_data_struct> &task_data_vec);
 void read_project_table(QSqlDatabase data_base, int id_table, QVector <project_data_struct> &project_data_vec);
 
