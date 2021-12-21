@@ -9,7 +9,7 @@ struct project_data_struct
     int pID;
     QString pName;
     QString pImage;
-    QString pData;
+    QString pDate;
     QString pTask;
     QString pBrigade;
 };
@@ -18,21 +18,22 @@ struct task_data_struct
 {
     int tID;
     QString tName;
-    QString tData;
+    QString tDate;
     QString tBrigade;
     QString tProgress;
 };
 
-void create_project_tables(QSqlDatabase data_base, int id_table);
+void create_project_table(QSqlDatabase data_base);
+void create_task_table(QSqlDatabase data_base, int id_table);
 
 void record_task_data(QSqlDatabase data_base, int id_table, QVector <task_data_struct> task_data_vec);
-void record_project_data(QSqlDatabase data_base, int id_table, QVector <project_data_struct> project_data_vec);
+void record_project_data(QSqlDatabase data_base, QVector <project_data_struct> project_data_vec);
 void add_task_record(QSqlDatabase data_base, int id_table, task_data_struct task_data_vec);
-void add_project_record(QSqlDatabase data_base, int id_table, project_data_struct project_data_vec);
+void add_project_record(QSqlDatabase data_base, project_data_struct project_data_vec);
 
 void read_model_from_db(QSqlDatabase data_base, QSqlTableModel *&model, QString name_table);
 void read_task_table(QSqlDatabase data_base, int id_table, QVector <task_data_struct> &task_data_vec);
-void read_project_table(QSqlDatabase data_base, int id_table, QVector <project_data_struct> &project_data_vec);
+void read_project_table(QSqlDatabase data_base, QVector <project_data_struct> &project_data_vec);
 
 void delete_row(QSqlDatabase data_base, QString name_table, int id_row);
 void delete_project(QSqlDatabase data_base, int id_table);

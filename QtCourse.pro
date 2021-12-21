@@ -11,13 +11,17 @@ CONFIG += c++11
 
 SOURCES += \
     DBFun.cpp \
+    dialog.cpp \
     main.cpp \
     mainwindow.cpp \
+    project_window.cpp \
     select_window.cpp
 
 HEADERS += \
     DBFun.h \
+    dialog.h \
     mainwindow.h \
+    project_window.h \
     select_window.h
 
 # Default rules for deployment.

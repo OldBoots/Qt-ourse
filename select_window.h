@@ -3,10 +3,8 @@
 
 #include <QWidget>
 #include <QObject>
-#include <QTableView>
 #include <QTreeView>
 #include <QTableWidget>
-#include <QTreeWidget>
 #include <QLayout>
 #include <QLabel>
 #include <QWidget>
@@ -16,7 +14,8 @@
 #include <QPushButton>
 #include <QTableView>
 #include <QHeaderView>
-#include <QTextEdit>
+#include "project_window.h"
+//#include <QTextEdit>
 
 #include "DBFun.h"
 
@@ -26,6 +25,7 @@ class select_window : public QWidget
 public:
     select_window(QWidget *parent = 0);
 private:
+    project_window *editor;
     QVector <int> vec_index;
     QVector <int> vec_view_index;
     QVector <project_data_struct> vec_data;
@@ -45,7 +45,8 @@ private:
 private slots:
     void slot_seek();
     void slot_show_info(int row, int column);
+    void slot_run_editor(int row, int column);
 signals:
-    void select_project();
+    void signal_set_ABS(int index);
 };
 #endif // SELECT_WINDOW_H

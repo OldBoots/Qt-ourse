@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>loup.png</file>
+        <file>cross.png</file>
+        <file>arrow.png</file>
+        <file>plus.png</file>
     </qresource>
 </RCC>

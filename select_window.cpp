@@ -2,15 +2,15 @@
 
 select_window::select_window(QWidget * parent) : QWidget(parent)
 {
+    editor = new project_window(this);
     QSqlDatabase data_base = QSqlDatabase::addDatabase("QSQLITE");
     data_base.setDatabaseName("dbProject.sqlite");
 
-    read_project_table(data_base, 0, vec_data);
+    read_project_table(data_base, vec_data);
     for(int i = 0; i < vec_data.size(); i++){
         vec_index << i;
         vec_view_index << i;
     }
-
     hbox[0].addWidget(create_butt);
 
     seek_butt->setIcon(QIcon(QPixmap(":/loup.png")));
@@ -36,7 +36,18 @@ select_window::select_window(QWidget * parent) : QWidget(parent)
 
     //      CONNECT
     connect(table, SIGNAL(cellClicked(int, int)), this, SLOT(slot_show_info(int, int)));
+    connect(table, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(slot_show_info(int, int)));
     connect(seek_butt, SIGNAL(clicked()), this, SLOT(slot_seek()));
+//    connect(editor, &project_window::firstWindow, this, &MainWindow::show);
+//    connect(editor, SIGNAL(), this, show());
+    connect(this, SIGNAL(signal_set_ABS(int)), editor, SLOT(project_window::slot_set_ABS(int)));
+}
+
+void select_window::slot_run_editor(int row, int column){
+    Q_UNUSED (column);
+    emit(signal_set_ABS(row));
+    editor->show();
+    this->close();
 }
 
 void select_window::slot_show_info(int row, int column){
@@ -52,7 +63,7 @@ void select_window::slot_show_info(int row, int column){
         imag->setAlignment(Qt::AlignCenter);
 
         info->setText("Дата:\n"
-                      + vec_data[vec_view_index[row]].pData
+                      + vec_data[vec_view_index[row]].pDate
                       + "\nБригады:\n"
                       + vec_data[vec_view_index[row]].pBrigade
                       + "\nЗадачи:\n"
@@ -73,7 +84,7 @@ void select_window::slot_seek(){
     QString seek_str = seek_line->text();
     if(seek_str != ""){
         for(int i = 0; i < vec_data.size(); i++){
-            if(vec_data[i].pName.indexOf(seek_str, 0, Qt::CaseInsensitive) != -1){
+            if(vec_data[i].pName.contains(seek_str, Qt::CaseInsensitive)){
                 vec_view_index << vec_index[i];
             }
         }
