@@ -1,17 +1,13 @@
 #include "project_window.h"
 
 
-project_window::project_window(QWidget * parent) : QWidget(parent)
+project_window::project_window(QSqlDatabase data_base1, QWidget * parent) : QWidget(parent)
 {
-    data_base.setDatabaseName("dbProject.sqlite");
+    //    abs_index = 0;
 
+    data_base = data_base1;
     read_project_table(data_base, vec_porject_data);
     read_task_table(data_base, vec_porject_data[abs_index].pID, vec_task_data);
-
-    red_falg = 0;
-    show_info(red_falg);
-    show_brigade_table(red_falg);
-    show_task_table(red_falg);
 
     butt_back->setIcon(QIcon(QPixmap(":/arrow.png")));
     butt_back->setMaximumWidth(32);
@@ -54,7 +50,7 @@ project_window::project_window(QWidget * parent) : QWidget(parent)
     area->setWidget(project_image);
     hbox[4].addLayout(&vbox[0], 1);
     hbox[4].addWidget(area);
-
+    qDebug() << "show_info0";
     setLayout(&hbox[4]);
 
     //    CONNECT
@@ -65,19 +61,42 @@ project_window::project_window(QWidget * parent) : QWidget(parent)
     connect(end_date_line, SIGNAL(editingFinished()), this, SLOT(slot_change_end_data()));
     connect(table_task, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(slot_change_task_data(int, int)));
     connect(butt_load_pix, SIGNAL(clicked()), this, SLOT(slot_change_image()));
+    connect(butt_back, SIGNAL(clicked()), this, SLOT(slot_go_back()));
+}
+
+void project_window::slot_go_back(){
+    this->close();
+    emit signal_go_back();
 }
 
 void project_window::slot_set_ABS(int index){
     abs_index = index;
+
+    red_falg = 0;
+    vec_porject_data.clear();
+    vec_task_data.clear();
+    read_project_table(data_base, vec_porject_data);
+    read_task_table(data_base, vec_porject_data[abs_index].pID, vec_task_data);
+
+    show_info(red_falg);
+    qDebug() << "show_info1";
+
+    show_brigade_table(red_falg);
+    qDebug() << "show_info2";
+
+    show_task_table(red_falg);
+    qDebug() << "show_info3";
 }
 
 void project_window::show_info(bool red_falg){
-    QList <QString> list_date = vec_porject_data[abs_index].pDate.split("-\n");
+    if(!vec_porject_data[abs_index].pDate.isEmpty()){
+        QList <QString> list_date = vec_porject_data[abs_index].pDate.split("-\n");
+        start_date_line->setText(list_date[0]);
+        end_date_line->setText(list_date[1]);
+    }
     name_project_line->setText(vec_porject_data[abs_index].pName);
     name_project_line->setMaximumWidth(250);
-    start_date_line->setText(list_date[0]);
     start_date_line->setMaximumWidth(250);
-    end_date_line->setText(list_date[1]);
     end_date_line->setMaximumWidth(250);
     name_project_line->setReadOnly(!red_falg);
     start_date_line->setReadOnly(!red_falg);
@@ -274,11 +293,11 @@ void project_window::slot_change_task_data(int row, int column){
                                                  QLineEdit::Normal,
                                                  QDir::home().dirName(), &ok);
         if (ok && !new_date.isEmpty()){
-            if(new_date.size() == 8){
+            if(new_date.size() == 10){
                 bool true_date = false;
                 for(int i = 0, count = 0; i < new_date.size(); i++){
                     if(new_date[i].isNumber() || new_date[i] == '.'){
-                        if(++count == 8){ true_date = true; }
+                        if(++count == 10){ true_date = true; }
                     }
                 }
                 if(true_date){
@@ -342,11 +361,11 @@ void project_window::slot_change_name_project(){
 void project_window::slot_change_start_data(){
     QString new_date = start_date_line->text();
     if(red_falg ){
-        if(!new_date.isEmpty() && new_date.size() == 8){
+        if(!new_date.isEmpty() && new_date.size() == 10){
             bool true_date = false;
             for(int i = 0, count = 0; i < new_date.size(); i++){
                 if(new_date[i].isNumber() || new_date[i] == '.'){
-                    if(++count == 8){ true_date = true; }
+                    if(++count == 10){ true_date = true; }
                 }
             }
             if(true_date){
@@ -363,11 +382,11 @@ void project_window::slot_change_start_data(){
 void project_window::slot_change_end_data(){
     QString new_date = end_date_line->text();
     if(red_falg ){
-        if(!new_date.isEmpty() && new_date.size() == 8){
+        if(!new_date.isEmpty() && new_date.size() == 10){
             bool true_date = false;
             for(int i = 0, count = 0; i < new_date.size(); i++){
                 if(new_date[i].isNumber() || new_date[i] == '.'){
-                    if(++count == 8){ true_date = true; }
+                    if(++count == 10){ true_date = true; }
                 }
             }
             if(true_date){

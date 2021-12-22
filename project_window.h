@@ -17,17 +17,18 @@
 
 #include "DBFun.h"
 #include "dialog.h"
+//#include "select_window.h"
 
 class project_window : public QWidget
 {
     Q_OBJECT
 public:
-    project_window(QWidget *parent = 0);
+    project_window(QSqlDatabase data_base1, QWidget *parent = 0);
 private:
     int abs_index = 0;
     bool red_falg;
-    QSqlDatabase data_base = QSqlDatabase::addDatabase("QSQLITE");
     QList <QString> list_brigade;
+    QSqlDatabase data_base;
     QTableWidget *table_brigade = new QTableWidget;
     QTableWidget *table_task = new QTableWidget;
     QVBoxLayout *vbox = new QVBoxLayout[2];
@@ -59,7 +60,10 @@ private slots:
     void slot_change_name_project();
     void slot_change_start_data();
     void slot_change_end_data();
+    void slot_go_back();
     void slot_set_ABS(int index);
+signals:
+    void signal_go_back();
 };
 
 #endif // PROJECT_WINDOW_H

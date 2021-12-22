@@ -14,6 +14,8 @@
 #include <QPushButton>
 #include <QTableView>
 #include <QHeaderView>
+#include <QDate>
+
 #include "project_window.h"
 //#include <QTextEdit>
 
@@ -25,6 +27,7 @@ class select_window : public QWidget
 public:
     select_window(QWidget *parent = 0);
 private:
+    QSqlDatabase data_base = QSqlDatabase::addDatabase("QSQLITE");
     project_window *editor;
     QVector <int> vec_index;
     QVector <int> vec_view_index;
@@ -46,7 +49,8 @@ private slots:
     void slot_seek();
     void slot_show_info(int row, int column);
     void slot_run_editor(int row, int column);
+    void slot_new_project();
 signals:
-    void signal_set_ABS(int index);
+    void signal_set_ABS(int row);
 };
 #endif // SELECT_WINDOW_H

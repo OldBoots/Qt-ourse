@@ -2,9 +2,10 @@
 
 select_window::select_window(QWidget * parent) : QWidget(parent)
 {
-    editor = new project_window(this);
-    QSqlDatabase data_base = QSqlDatabase::addDatabase("QSQLITE");
+
     data_base.setDatabaseName("dbProject.sqlite");
+    editor = new project_window(data_base);
+    connect(this, SIGNAL(signal_set_ABS(int)), editor, SLOT(slot_set_ABS(int)));
 
     read_project_table(data_base, vec_data);
     for(int i = 0; i < vec_data.size(); i++){
@@ -36,16 +37,51 @@ select_window::select_window(QWidget * parent) : QWidget(parent)
 
     //      CONNECT
     connect(table, SIGNAL(cellClicked(int, int)), this, SLOT(slot_show_info(int, int)));
-    connect(table, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(slot_show_info(int, int)));
+    connect(table, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(slot_run_editor(int, int)));
     connect(seek_butt, SIGNAL(clicked()), this, SLOT(slot_seek()));
-//    connect(editor, &project_window::firstWindow, this, &MainWindow::show);
-//    connect(editor, SIGNAL(), this, show());
-    connect(this, SIGNAL(signal_set_ABS(int)), editor, SLOT(project_window::slot_set_ABS(int)));
+    connect(editor, SIGNAL(signal_go_back()), this, SLOT(show()));
+    connect(create_butt, SIGNAL(clicked()), this, SLOT(slot_new_project()));
+
+}
+
+void select_window::slot_new_project(){
+    bool ok;
+    project_data_struct trt;
+    QString new_name = QInputDialog::getText(this,
+                                             QString::fromUtf8("Имя проекта"),
+                                             QString::fromUtf8("Имя:"),
+                                             QLineEdit::Normal,
+                                             QDir::home().dirName(), &ok);
+    if (ok && !new_name.isEmpty()){
+        trt.pName = new_name;
+        add_project_record(data_base, trt);
+        vec_data.clear();
+        read_project_table(data_base, vec_data);
+        int last_id = 0;
+        for(int i = 0; i < vec_data.size(); i++){
+            last_id = qMax(last_id, vec_data[i].pID);
+        }
+        create_task_table(data_base, last_id);
+
+//        emit signal_set_ABS(last_id);
+//        editor->show();
+//        this->close();
+
+        vec_view_index.clear();
+        vec_index.clear();
+        for(int i = 0; i < vec_data.size(); i++){
+            vec_index << i;
+            vec_view_index << i;
+        }
+        vec_view_index = vec_index;
+         show_table();
+    }
 }
 
 void select_window::slot_run_editor(int row, int column){
+    qDebug() << "row " << row;
     Q_UNUSED (column);
-    emit(signal_set_ABS(row));
+    emit signal_set_ABS(row);
     editor->show();
     this->close();
 }
